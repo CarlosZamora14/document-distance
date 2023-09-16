@@ -39,5 +39,29 @@ function getDocumentDistance(text1, text2) {
   return Math.acos(computeDotProduct(vec1, vec2) / (norm1 * norm2));
 }
 
+function editDistance(word1, word2) {
+  const matrix = Array.from({ length: word1.length + 1 }, () => Array.from({ length: word2.length + 1 }, () => 0));
+
+  for (let i = 0; i < word1.length; i++) {
+    matrix[i + 1][0] = matrix[i][0] + 1;
+  }
+
+  for (let j = 0; j < word2.length; j++) {
+    matrix[0][j + 1] = matrix[0][j] + 1;
+  }
+
+  for (let i = 0; i < word1.length; i++) {
+    for (let j = 0; j < word2.length; j++) {
+      matrix[i + 1][j + 1] = Math.min(matrix[i + 1][j], matrix[i][j + 1], matrix[i][j]);
+      if (word1[i] !== word2[j]) matrix[i + 1][j + 1]++;
+    }
+  }
+
+  console.table(matrix)
+  return matrix[word1.length][word2.length];
+}
+
+console.log(editDistance('hello', 'kelm'));
+
 console.log(getDocumentDistance(text1, text2));
 console.log(getDocumentDistance("To be or not to be", "Doubt truth to be a liar"));
